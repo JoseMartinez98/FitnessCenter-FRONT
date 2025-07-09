@@ -1,24 +1,57 @@
 <script setup>
-import { ref, onMounted } from "vue"; // Importa funciones reactivas y ciclo de vida de Vue
-import axios from "axios"; // Importa axios para hacer peticiones HTTP
+import { ref, onMounted, computed } from "vue";
+import axios from "axios";
+import { usuario } from "@/composables/useAuth.js";
 
-const planes = ref([]); // Variable reactiva para almacenar la lista de planes
+const planes = ref([]);
+const planFavorito = ref(null);  // id del plan favorito actual
+const idUsuario = computed(() => usuario.value?.id);
 
-// Al montar el componente, cargar los datos desde la API
 onMounted(async () => {
   try {
-    // Petición GET a la API para obtener los planes
+    // Cargar todos los planes
     const response = await axios.get("http://localhost:8080/api/planes");
-    console.log("Respuesta de API:", response.data);
-
-    // Guardar la respuesta en la variable reactiva
     planes.value = response.data;
+
+    // Cargar plan favorito único del usuario
+    if (idUsuario.value) {
+      const favResponse = await axios.get(`http://localhost:8080/api/favoritos/${idUsuario.value}`);
+      if (favResponse.data && favResponse.data.id) {
+        planFavorito.value = favResponse.data.id;
+      } else {
+        planFavorito.value = null;
+      }
+    }
   } catch (error) {
-    // En caso de error, mostrar en consola
-    console.error("Error cargando planes:", error);
+    console.error("Error cargando datos:", error);
   }
 });
+
+const toggleFavorito = async (planId) => {
+  if (!idUsuario.value) return;
+
+  const request = { idUsuario: idUsuario.value, idPlan: planId };
+
+  try {
+    if (planFavorito.value === planId) {
+      // Si el plan ya es favorito, lo quitamos
+      await axios.delete("http://localhost:8080/api/favoritos/eliminar", {
+        data: request,
+      });
+      planFavorito.value = null;
+    } else {
+      // Si no es favorito, lo ponemos como favorito
+      await axios.post("http://localhost:8080/api/favoritos/agregar", request);
+      planFavorito.value = planId;
+    }
+  } catch (error) {
+    console.error("Error al cambiar favorito:", error);
+  }
+};
+
+const esFavorito = (planId) => planFavorito.value === planId;
 </script>
+
 
 <template>
   <!-- Parte superior con imagen de fondo -->
@@ -51,6 +84,17 @@ onMounted(async () => {
         <h2>
           PASE DIARIO: <span>{{ plan.precioDiario }}€</span>
         </h2>
+        <!-- Botón de Favorito -->
+        <button
+          @click="toggleFavorito(plan.id)"
+          :class="['favorito-btn', esFavorito(plan.id) ? 'activo' : '']"
+        >
+          {{
+            esFavorito(plan.id)
+              ? "💔 Quitar de favoritos"
+              : "💚 Añadir a favoritos"
+          }}
+        </button>
       </div>
     </div>
   </div>
@@ -143,6 +187,10 @@ span {
   border-radius: 16px;
   text-align: left;
   margin: 2%;
+  overflow: hidden; 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 /* Imagen dentro de la tarjeta ocupa todo ancho y 50% altura */
@@ -150,7 +198,43 @@ span {
   width: 100%;
   height: 50%;
 }
+.favorito-btn {
+  display: block;
+  width: calc(100% - 40px); /* Asegura que el botón no sobresalga por los márgenes */
+  margin: 20px auto; 
+  padding: 10px 16px;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: transparent;
+  color: green;
+  border: 2px solid green;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  text-align: center;
+  box-sizing: border-box;
+}
+.favorito-btn.activo {
+  border-color: red;
+  color: red;
+}
+.favorito-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
 
+.favorito-btn.activo {
+  border-color: red;
+  color: red;
+}
+.favorito-btn:hover {
+  background-color: rgba(255, 255, 255, 0.18);
+}
+
+.card,
+.contenido,
+.favorito-btn {
+  box-sizing: border-box;
+}
 /* Estilos responsivos para pantallas menores a 768px */
 @media screen and (max-width: 768px) {
   .contenido {
@@ -164,6 +248,15 @@ span {
   }
   .card img {
     height: auto;
+  }
+   .favorito-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9rem;
+    padding: 10px;
+    width: 80%; 
+    box-sizing: border-box;
   }
 }
 </style>

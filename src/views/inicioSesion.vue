@@ -27,7 +27,6 @@ const inicioSesion = async () => {
         email: email.value,
         password: password.value,
       },
-      { withCredentials: true }
     );
 
     // 🔍 Mostramos en consola la respuesta para depuración
