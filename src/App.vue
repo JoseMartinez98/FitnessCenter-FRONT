@@ -5,6 +5,7 @@ import { usuario } from "@/composables/useAuth"; // Importa el estado reactivo d
 
 import navegador from "./components/navegador.vue"; // Importa el componente navegador (barra de navegación)
 import pieDePagina from "./components/pieDePagina.vue"; // Importa el componente pie de página
+import MenuLateral from "./components/MenuLateral.vue";
 
 const route = useRoute(); // Obtiene la ruta actual
 // Define las rutas donde NO se debe mostrar el navegador (login y registro)
@@ -27,6 +28,7 @@ const mostrarNavegador = computed(() => {
 
     <!-- Contenedor principal para las vistas del router -->
     <main class="main-content">
+      <MenuLateral />
       <router-view />
       <!-- Aquí se renderizan las rutas hijas -->
     </main>

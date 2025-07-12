@@ -72,8 +72,8 @@ onMounted(async () => {
           }}
         </span>
       </h1>
+      <h2 class="titulo2">Datos personales:</h2>
       <div class="datosPersonales">
-        <h2 class="titulo2">Datos personales:</h2>
       </div>
       <h2 class="titulo2">Tu plan favorito:</h2>
       <div class="contenidoPerfil" v-if="plan">
@@ -111,12 +111,11 @@ onMounted(async () => {
 
 <style scoped>
 .titulo {
-  width: fit-content;
   background-color: green;
   padding: 1rem;
   background-size: auto;
   border-radius: 16px;
-  margin-left: 2rem;
+  margin: 20px;
 }
 .datosPersonales {
   display: flex;
@@ -133,21 +132,17 @@ onMounted(async () => {
   align-items: center;
 }
 .titulo2 {
-  width: fit-content;
   background-color: green;
-  margin: 20px;
   padding: 1rem;
   background-size: auto;
   border-radius: 16px;
-  margin-left: 2rem;
+  margin: 20px;
 }
 h1 {
   color: rgb(255, 255, 255);
-  margin: 10px;
 }
 h2 {
   color: rgb(255, 255, 255);
-  margin: 10px;
 }
 p {
   color: rgb(255, 255, 255);
@@ -195,7 +190,7 @@ span {
   left: 0;
   height: 100%;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.237);
+  background-color: rgba(0, 0, 0, 0.573);
   z-index: 1;
 }
 
@@ -220,7 +215,9 @@ span {
   flex-direction: column;
   justify-content: space-between;
 }
-
+.card > h1, h2 {
+  margin: 0.5rem;
+}
 /* Imagen dentro de la tarjeta ocupa todo ancho y 50% altura */
 .card img {
   width: 100%;

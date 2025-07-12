@@ -215,6 +215,7 @@ button:hover {
   gap: 2rem;
   align-items: center;
   padding: 20px;
+  margin-top: 2rem;
 }
 
 /* Tamaño y transición para enlaces de íconos sociales */

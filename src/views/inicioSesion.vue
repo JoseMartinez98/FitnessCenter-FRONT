@@ -26,7 +26,7 @@ const inicioSesion = async () => {
       {
         email: email.value,
         password: password.value,
-      },
+      }
     );
 
     // 🔍 Mostramos en consola la respuesta para depuración
@@ -38,8 +38,12 @@ const inicioSesion = async () => {
       setUsuario(response.data.usuario);
       router.push("/inicio");
     } else {
-      console.error("⚠️ No se recibió token del backend. Revisar respuesta:", response.data);
-      mensaje.value = "Error inesperado: el servidor no devolvió un token válido.";
+      console.error(
+        "⚠️ No se recibió token del backend. Revisar respuesta:",
+        response.data
+      );
+      mensaje.value =
+        "Error inesperado: el servidor no devolvió un token válido.";
       error.value = true;
     }
   } catch (err) {
@@ -50,14 +54,13 @@ const inicioSesion = async () => {
   }
 };
 
-
 // Obtenemos el token almacenado en localStorage para validar sesión
 const token = localStorage.getItem("token");
 
 // Hacemos una petición GET protegida para verificar que el token es válido
 axios.get("http://localhost:8080/api/usuarios/protegido", {
   headers: {
-    Authorization: `Bearer ${token}`,  // Enviamos token en encabezado
+    Authorization: `Bearer ${token}`, // Enviamos token en encabezado
   },
 });
 
@@ -104,15 +107,15 @@ onMounted(() => {
         </svg>
       </a>
     </div>
-    
+
     <!-- Formulario para inicio de sesión -->
     <form
-      @submit.prevent="inicioSesion"  
+      @submit.prevent="inicioSesion"
       class="formularioInicioSesion"
       action=""
       method="post"
     >
-    <!-- Prevenimos el submit estándar y ejecutamos la función inicioSesion -->
+      <!-- Prevenimos el submit estándar y ejecutamos la función inicioSesion -->
       <h1>INICIAR SESIÓN</h1>
       <!-- Campo para email enlazado a la variable reactiva email -->
       <input v-model="email" type="email" placeholder="Correo" required />
@@ -131,8 +134,10 @@ onMounted(() => {
       <router-link class="enlace" to="/registrousuario">
         ¿Aún no estás registrado? Haga click aqui para registrase.
       </router-link>
+      <router-link class="enlace" to="/cambiar-contrasena">
+        ¿Olvidaste tu contraseña? Haz clic aquí para restablecerla.
+      </router-link>
     </form>
-  
   </div>
 </template>
 
@@ -242,6 +247,7 @@ button:hover {
   gap: 2rem;
   align-items: center;
   padding: 20px;
+  margin-top: 2rem;
 }
 
 .social-icons a {

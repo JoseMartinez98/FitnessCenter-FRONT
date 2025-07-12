@@ -18,12 +18,18 @@ const router = useRouter();
 
 // Estado reactivo que controla si el menú móvil está abierto o cerrado
 const menuAbierto = ref(false);
+const usuarioMenuAbierto = ref(false);
 
 // Función para alternar la visibilidad del menú (mostrar/ocultar)
 const toggleMenu = () => {
   menuAbierto.value = !menuAbierto.value;
 };
-
+const toggleUsuarioMenu = () => {
+  // Solo togglea en móvil (chequea ancho ventana)
+  if (window.innerWidth <= 768) {
+    usuarioMenuAbierto.value = !usuarioMenuAbierto.value;
+  }
+};
 // Función para cerrar sesión:
 // - Elimina el token almacenado en localStorage
 // - Resetea el estado del usuario
@@ -57,32 +63,8 @@ onMounted(() => {
     <div class="nav-container">
       <!-- Botón hamburguesa para menú móvil -->
       <button class="hamburguesa" @click="toggleMenu">☰</button>
-
-      <!-- Mostrar link al perfil solo si el usuario está logueado -->
-      <router-link
-        v-if="usuarioActivo"
-        to="/perfil"
-        class="usuario-logueado"
-        style="display: flex; align-items: center; gap: 8px"
-      >
-        <!-- Icono SVG representando al usuario -->
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          height="20"
-          viewBox="0 0 24 24"
-          width="20"
-          fill="currentColor"
-        >
-          <path
-            d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"
-          />
-        </svg>
-        <!-- Mostrar nombre o email del usuario -->
-        {{ usuarioActivo.nombre || usuarioActivo.email }}
-      </router-link>
-
-      <!-- Menú de navegación -->
-      <ul class="navegadorUl" :class="{ abierta: menuAbierto }">
+      <!-- Menú móvil -->
+      <ul :class="['navegadorUl', { abierta: menuAbierto }]">
         <li class="navegadorLi">
           <router-link to="/inicio">Inicio</router-link>
         </li>
@@ -95,30 +77,125 @@ onMounted(() => {
         <li class="navegadorLi">
           <router-link to="/horarios">Horarios</router-link>
         </li>
-        <li class="navegadorLi">
-          <a href="#" @click.prevent="cerrarSesion">Cerrar sesión</a>
-        </li>
       </ul>
+      <div class="logomenu">
+        <img src="/favicon.ico" />
+        <p>Macael Fitness Center</p>
+      </div>
+
+      <!-- Icono + nombre del usuario (menú desplegable al hacer click) -->
+      <div v-if="usuarioActivo" 
+      class="usuario-logueado"
+      @click="toggleUsuarioMenu">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="20"
+          viewBox="0 0 24 24"
+          width="20"
+          fill="currentColor"
+        >
+          <path
+            d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"
+          />
+        </svg>
+        {{ usuarioActivo.nombre || usuarioActivo.email }}
+
+        <!-- Menú desplegable -->
+        <div class="usuario-dropdown"
+        :class="{ abierto: usuarioMenuAbierto }"
+        >
+          <router-link to="/perfil">Perfil</router-link>
+          <a href="#" @click.prevent="cerrarSesion">Cerrar sesión</a>
+        </div>
+      </div>
     </div>
   </nav>
 </template>
 
 <style scoped>
 /* Estilos para la barra de navegación */
-
-.navegador {
-  background-color: black;
-  padding: 8px;
-  width: 100%;
+.logomenu {
   display: flex;
+  gap: 1rem;
+  margin: 1rem;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
+  color: green;
+  font-size: 30px;
+}
+.logomenu > img {
+  width: 50px;
+  height: 50px;
+}
+.navegador {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: black;
+  padding: 8px;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid green;
+}
+.usuario-logueado {
+  font-weight: bold;
+  padding: 20px;
+  margin-left: 2%;
+  font-size: 20px;
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.usuario-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #222;
+  border: 1px solid #444;
+  padding: 10px;
+  flex-direction: column;
+  z-index: 1000;
+  border-radius: 6px;
+  min-width: 150px;
+}
+.usuario-logueado:hover .usuario-dropdown {
+  display: flex;
+}
+.usuario-dropdown.abierto {
+  display: flex;
+  flex-direction: column;
+}
+.usuario-dropdown a,
+.usuario-dropdown router-link {
+  color: white;
+  text-decoration: none;
+  margin: 5px 0;
+  transition: color 0.2s;
+}
+
+.usuario-dropdown a[href^="/perfil"]:hover,
+.usuario-dropdown router-link[to="/perfil"]:hover {
+  color: green;
+}
+.usuario-dropdown a[href="#"]:hover {
+  color: red;
 }
 
 .nav-container {
   display: flex;
   width: 100%;
-  justify-content: flex-start;
+  justify-content: space-between;
 }
 
 /* Botón hamburguesa oculto por defecto, visible en móviles */
@@ -150,7 +227,7 @@ onMounted(() => {
 /* Lista de navegación */
 .navegadorUl {
   width: 100%;
-  display: flex;
+  display: none;
   flex-direction: row;
   align-items: center;
   justify-content: center;
@@ -177,14 +254,6 @@ onMounted(() => {
 }
 .navegadorLi a:hover {
   color: green;
-}
-
-/* Color especial para el último elemento (Cerrar sesión) */
-.navegadorUl li:last-child a {
-  color: red;
-}
-.navegadorUl li:last-child a:hover {
-  color: darkred;
 }
 
 /* Estilos responsivos para pantallas menores a 768px */
@@ -219,11 +288,12 @@ onMounted(() => {
   .navegadorLi a:focus {
     color: green;
   }
-  .navegadorUl li:last-child a {
-    color: red;
+  .logomenu {
+    font-size: 0px;
   }
-  .navegadorUl li:last-child a:focus {
-    color: darkred;
+  .logomenu > img {
+    width: 50px;
+    height: 50px;
   }
 }
 </style>

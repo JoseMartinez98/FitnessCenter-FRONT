@@ -13,6 +13,18 @@ const routes = [
     component: () => import('../views/registroUsuario.vue'),
     meta: { title: 'Macael Fitness Center | Registro' }
   },
+    {
+    path: "/cambiar-contrasena",
+    name: "CambiarContrasena",
+    component: () => import('../views/CambiarContrasena.vue'),
+    meta: { title: 'Macael Fitness Center | Recuperar contraseña' }
+  },
+  {
+  path: "/restablecer-contrasena",
+  name: "RestablecerContrasena",
+  component: () => import("../views/RestablecerContrasena.vue"),
+  meta: { title: 'Macael Fitness Center | Recuperar contraseña' }
+  },
   {
     path: '/inicio',
     name: 'inicio',

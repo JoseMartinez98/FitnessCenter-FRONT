@@ -11,14 +11,7 @@
   <div class="rellenoInicio">
     <div class="contenido">
       <!-- Título centrado, estilizado con color verde y negrita -->
-      <h2
-        style="
-          text-align: center;
-          margin-bottom: 2%;
-          color: green;
-          font-weight: bold;
-        "
-      >
+      <h2>
         Horario Clases Dirigidas 24-25
       </h2>
 
@@ -126,14 +119,7 @@
       </table>
 
       <!-- Nota informativa resaltada en rojo indicando condición mínima para impartir clases -->
-      <p
-        style="
-          text-align: center;
-          color: red;
-          margin-top: 10px;
-          font-weight: bold;
-        "
-      >
+      <p>
         *Mínimo 5 personas para impartir clase
       </p>
     </div>
@@ -174,7 +160,7 @@
   left: 0;
   height: 100%;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.237);
+  background-color: rgba(0, 0, 0, 0.573);
   z-index: 1;
 }
 
@@ -189,17 +175,31 @@
 
 /* Fondo claro y padding para la tabla y contenido principal */
 .contenido {
-  background: #f0f0f0;
   padding: 20px;
 }
-
+h2 {
+  text-align: center;
+  margin-bottom: 2%;
+  color: rgb(4, 255, 4);
+  border-radius: 16px;
+  padding: 1rem;
+  font-weight: bold;
+}
+p {
+  text-align: center;
+  color: rgb(255, 181, 32);
+  margin-top: 2%;
+  font-weight: bold;
+  border-radius: 16px;
+  padding: 1rem;
+}
 /* Estilo para la tabla: ancho máximo, centrado, fondo blanco y sombra sutil */
 table {
   border-collapse: collapse;
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
-  background: white;
+  background: rgb(255, 255, 255);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 

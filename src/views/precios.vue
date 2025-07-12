@@ -4,16 +4,14 @@ import axios from "axios";
 import { usuario } from "@/composables/useAuth.js";
 
 const planes = ref([]);
-const planFavorito = ref(null);  // id del plan favorito actual
+const planFavorito = ref(null);
 const idUsuario = computed(() => usuario.value?.id);
 
 onMounted(async () => {
   try {
-    // Cargar todos los planes
     const response = await axios.get("http://localhost:8080/api/planes");
     planes.value = response.data;
 
-    // Cargar plan favorito único del usuario
     if (idUsuario.value) {
       const favResponse = await axios.get(`http://localhost:8080/api/favoritos/${idUsuario.value}`);
       if (favResponse.data && favResponse.data.id) {
@@ -28,24 +26,15 @@ onMounted(async () => {
 });
 
 const toggleFavorito = async (planId) => {
-  if (!idUsuario.value) return;
+  if (!idUsuario.value || planFavorito.value === planId) return;
 
   const request = { idUsuario: idUsuario.value, idPlan: planId };
 
   try {
-    if (planFavorito.value === planId) {
-      // Si el plan ya es favorito, lo quitamos
-      await axios.delete("http://localhost:8080/api/favoritos/eliminar", {
-        data: request,
-      });
-      planFavorito.value = null;
-    } else {
-      // Si no es favorito, lo ponemos como favorito
-      await axios.post("http://localhost:8080/api/favoritos/agregar", request);
-      planFavorito.value = planId;
-    }
+    await axios.post("http://localhost:8080/api/favoritos/agregar", request);
+    planFavorito.value = planId;
   } catch (error) {
-    console.error("Error al cambiar favorito:", error);
+    console.error("Error al agregar favorito:", error);
   }
 };
 
@@ -54,51 +43,35 @@ const esFavorito = (planId) => planFavorito.value === planId;
 
 
 <template>
-  <!-- Parte superior con imagen de fondo -->
   <div class="paginaInicio"></div>
 
-  <!-- Contenedor principal con imagen de fondo y contenido -->
   <div class="rellenoInicio">
     <div class="contenido">
-      <!-- Recorre la lista de planes y crea una tarjeta por cada uno -->
       <div class="card" v-for="plan in planes" :key="plan.id">
-        <!-- Nombre del plan en mayúsculas -->
         <h1>{{ plan.nombre?.toUpperCase() || "Sin nombre" }}</h1>
-
-        <!-- Imagen del plan -->
         <img :src="plan.imagen" alt="Imagen del plan" />
-
-        <!-- Precio mensual -->
-        <h2>
-          PRECIO MENSUAL: <span>{{ plan.precioMensual }}€</span>
-        </h2>
-
-        <!-- Descuento para trabajadores de Cosentino y precio con descuento -->
+        <h2>PRECIO MENSUAL: <span>{{ plan.precioMensual }}€</span></h2>
         <p>
           Descuento del
           <span class="descuento">{{ plan.descuento }}%</span> para trabajadores
           de Cosentino, precio de: <span>{{ plan.precioConDescuento }}€</span>
         </p>
+        <h2>PASE DIARIO: <span>{{ plan.precioDiario }}€</span></h2>
 
-        <!-- Precio de pase diario -->
-        <h2>
-          PASE DIARIO: <span>{{ plan.precioDiario }}€</span>
-        </h2>
-        <!-- Botón de Favorito -->
+        <!-- Botón de favorito -->
         <button
           @click="toggleFavorito(plan.id)"
-          :class="['favorito-btn', esFavorito(plan.id) ? 'activo' : '']"
+          :class="['favorito-btn', esFavorito(plan.id) ? 'favorito-activo' : '']"
+          :disabled="esFavorito(plan.id)"
         >
-          {{
-            esFavorito(plan.id)
-              ? "💔 Quitar de favoritos"
-              : "💚 Añadir a favoritos"
-          }}
+          {{ esFavorito(plan.id) ? '💚 Favorito' : '💚 Añadir a favoritos' }}
         </button>
       </div>
     </div>
   </div>
 </template>
+
+
 
 <style scoped>
 /* Estilos para los títulos y párrafos, con texto blanco */
@@ -157,7 +130,7 @@ span {
   left: 0;
   height: 100%;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.237);
+  background-color: rgba(0, 0, 0, 0.573);
   z-index: 1;
 }
 
@@ -214,20 +187,32 @@ span {
   text-align: center;
   box-sizing: border-box;
 }
-.favorito-btn.activo {
-  border-color: red;
-  color: red;
-}
-.favorito-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+.favorito-btn {
+  display: block;
+  width: calc(100% - 40px);
+  margin: 20px auto;
+  padding: 10px 16px;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: transparent;
+  color: green;
+  border: 2px solid green;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  text-align: center;
+  box-sizing: border-box;
 }
 
-.favorito-btn.activo {
-  border-color: red;
-  color: red;
+.favorito-btn:hover:not(:disabled) {
+  background-color: rgba(170, 180, 170, 0.33);
 }
-.favorito-btn:hover {
-  background-color: rgba(255, 255, 255, 0.18);
+
+.favorito-btn.favorito-activo {
+  background-color: rgb(30, 127, 30);
+  color: white;
+  border-color: green;
+  cursor: default;
 }
 
 .card,
