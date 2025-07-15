@@ -6,7 +6,11 @@ import { usuario } from "@/composables/useAuth.js";
 const planes = ref([]);
 const planFavorito = ref(null);
 const idUsuario = computed(() => usuario.value?.id);
-
+const esAdmin = computed(
+  () =>
+    Array.isArray(usuario.value?.roles) &&
+    usuario.value.roles.some((rol) => rol.toLowerCase() === "role_admin")
+);
 onMounted(async () => {
   try {
     const response = await axios.get("http://localhost:8080/api/planes");
@@ -60,7 +64,7 @@ const esFavorito = (planId) => planFavorito.value === planId;
         <h2>PASE DIARIO: <span>{{ plan.precioDiario }}€</span></h2>
 
         <!-- Botón de favorito -->
-        <button
+        <button v-if="!esAdmin"
           @click="toggleFavorito(plan.id)"
           :class="['favorito-btn', esFavorito(plan.id) ? 'favorito-activo' : '']"
           :disabled="esFavorito(plan.id)"

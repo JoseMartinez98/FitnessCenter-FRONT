@@ -30,6 +30,12 @@ const toggleUsuarioMenu = () => {
     usuarioMenuAbierto.value = !usuarioMenuAbierto.value;
   }
 };
+
+const esAdmin = computed(
+  () =>
+    Array.isArray(usuario.value?.roles) &&
+    usuario.value.roles.some((rol) => rol.toLowerCase() === "role_admin")
+);
 // Función para cerrar sesión:
 // - Elimina el token almacenado en localStorage
 // - Resetea el estado del usuario
@@ -84,9 +90,11 @@ onMounted(() => {
       </div>
 
       <!-- Icono + nombre del usuario (menú desplegable al hacer click) -->
-      <div v-if="usuarioActivo" 
-      class="usuario-logueado"
-      @click="toggleUsuarioMenu">
+      <div
+        v-if="usuarioActivo"
+        class="usuario-logueado"
+        @click="toggleUsuarioMenu"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           height="20"
@@ -101,10 +109,8 @@ onMounted(() => {
         {{ usuarioActivo.nombre || usuarioActivo.email }}
 
         <!-- Menú desplegable -->
-        <div class="usuario-dropdown"
-        :class="{ abierto: usuarioMenuAbierto }"
-        >
-          <router-link to="/perfil">Perfil</router-link>
+        <div class="usuario-dropdown" :class="{ abierto: usuarioMenuAbierto }">
+          <router-link v-if="!esAdmin" to="/perfil">Perfil</router-link>
           <a href="#" @click.prevent="cerrarSesion">Cerrar sesión</a>
         </div>
       </div>

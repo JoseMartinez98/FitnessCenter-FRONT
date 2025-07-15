@@ -65,5 +65,12 @@
 .contenido {
   padding: 20px;
 }
-
+h1 {
+  color: black;
+  background-color: rgb(255, 255, 255);
+  padding: 1rem;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+}
 </style>
