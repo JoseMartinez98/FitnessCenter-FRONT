@@ -10,7 +10,7 @@ import { usuario, setUsuario, cargarUsuario } from "@/composables/useAuth";
 
 // Creamos una instancia del router para poder redirigir rutas
 const router = useRouter();
-
+ 
 // Declaramos variables reactivas para email, contraseña, mensaje y estado de error
 const email = ref("");
 const password = ref("");
@@ -21,6 +21,7 @@ const error = ref(false);
 const inicioSesion = async () => {
   try {
     // Realizamos petición POST al backend para autenticar usuario
+    console.log('Enviando login:', email.value, password.value);
     const response = await axios.post(
       "http://localhost:8080/api/usuarios/login",
       {

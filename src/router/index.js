@@ -55,6 +55,12 @@ const routes = [
     component: () => import('../views/perfil.vue'),
     meta: { title: 'Macael Fitness Center | Perfil' }
   },
+    {
+    path: '/admin',
+    name: 'admin',
+    component: () => import('../views/Admin.vue'),
+    meta: { title: 'Macael Fitness Center | Admin' }
+  },
 ]
 
 const router = createRouter({
