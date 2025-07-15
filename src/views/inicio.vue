@@ -3,6 +3,9 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 
 const noticias = ref([]);
+const currentPage = ref(0);
+const totalPages = ref(0);
+const pageSize = 5;
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -13,19 +16,31 @@ const formatDate = (dateString) => {
   });
 };
 
-onMounted(async () => {
+const fetchNoticias = async (page = 0) => {
   try {
-    const response = await axios.get("http://localhost:8080/api/noticias");
-    noticias.value = response.data;
+    const response = await axios.get("http://localhost:8080/api/noticias", {
+      params: {
+        page,
+        size: pageSize,
+      },
+    });
+    noticias.value = response.data.content;
+    totalPages.value = response.data.totalPages;
+    currentPage.value = response.data.number;
   } catch (error) {
     console.error("Error cargando noticias:", error);
   }
+};
+
+onMounted(() => {
+  fetchNoticias();
 });
 </script>
 
 <template>
   <h1>Últimas noticias</h1>
   <div class="paginaInicio"></div>
+  <h1>Últimas noticias</h1>
   <div class="rellenoInicio">
     <div class="contenido">
       <div class="noticia" v-for="noticia in noticias" :key="noticia.id">
@@ -35,6 +50,21 @@ onMounted(async () => {
         </div>
         <img :src="noticia.imagen" alt="Noticia" class="noticia-imagen" />
         <p class="fecha">{{ formatDate(noticia.fechaRegistro) }}</p>
+      </div>
+      <div class="paginacion">
+        <button
+          :disabled="currentPage === 0"
+          @click="fetchNoticias(currentPage - 1)"
+        >
+          <
+        </button>
+        <span>Página {{ currentPage + 1 }} de {{ totalPages }}</span>
+        <button
+          :disabled="currentPage + 1 >= totalPages"
+          @click="fetchNoticias(currentPage + 1)"
+        >
+          >
+        </button>
       </div>
     </div>
   </div>
@@ -126,8 +156,35 @@ h1 {
   margin-top: 0.5rem;
   color: white;
   text-justify: auto;
-  margin-left:1rem;
+  margin-left: 1rem;
   margin-right: 1rem;
+}
+.paginacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+button{
+  all: unset;
+  padding: 0.5rem;
+  background-color: rgba(255, 255, 255, 0);
+  text-shadow: 2px 2px 2px green;
+  border-radius: 16px;
+  font-size: 50px;
+  transition: 0.2s;
+}
+button:hover{
+  cursor: pointer;
+  scale: 1.2;
+}
+button:focus{
+color:black;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 @media (max-width: 768px) {

@@ -4,16 +4,15 @@
 </script>
 
 <template>
+  <h1>Horarios de las clases</h1>
   <!-- Contenedor superior con imagen de fondo fija, representa cabecera visual -->
   <div class="paginaInicio"></div>
-
+  <h1>Horarios de las clases</h1>
   <!-- Contenedor principal con fondo de logo y contenido superpuesto -->
   <div class="rellenoInicio">
     <div class="contenido">
       <!-- Título centrado, estilizado con color verde y negrita -->
-      <h2>
-        Horario Clases Dirigidas 24-25
-      </h2>
+      <h2>Horario Clases Dirigidas 24-25</h2>
 
       <!-- Tabla principal con horario semanal de clases dirigidas -->
       <table>
@@ -119,9 +118,7 @@
       </table>
 
       <!-- Nota informativa resaltada en rojo indicando condición mínima para impartir clases -->
-      <p>
-        *Mínimo 5 personas para impartir clase
-      </p>
+      <p>*Mínimo 5 personas para impartir clase</p>
     </div>
   </div>
 </template>
@@ -147,7 +144,7 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
-  background-position: center center;
+  background-position: bottom;
   height: 100vh;
   overflow: hidden;
 }
@@ -176,6 +173,14 @@
 /* Fondo claro y padding para la tabla y contenido principal */
 .contenido {
   padding: 20px;
+}
+h1 {
+  color: black;
+  background-color: rgb(255, 255, 255);
+  padding: 1rem;
+  width: 100%;
+  text-align: center;
+  margin: 0;
 }
 h2 {
   text-align: center;

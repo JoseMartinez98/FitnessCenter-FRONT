@@ -27,11 +27,12 @@ const descargarDocumento = (ruta) => {
 </script>
 
 <template>
+  <h1> rutinas</h1>
   <div class="paginaInicio"></div>
   <!-- Fondo con imagen de mancuernas -->
+  <h1>RUTINAS DE ENTRENAMIENTO</h1>
   <div class="rellenoInicio">
     <div class="contenido">
-      <h2>RUTINAS DE ENTRENAMIENTO</h2>
       <table class="tabla-rutinas">
         <thead>
           <tr>
@@ -105,8 +106,12 @@ const descargarDocumento = (ruta) => {
   position: relative;
   z-index: 2;
   color: white;
-  text-align: center;
-  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 2rem;
 }
 
 /* Estilos para la tabla de rutinas */
@@ -118,7 +123,14 @@ const descargarDocumento = (ruta) => {
   z-index: 2;
   position: relative;
 }
-
+h1{
+  color: black;
+  background-color: rgb(255, 255, 255);
+  padding: 1rem;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+}
 h2 {
   background-color: green;
   width: 80%;

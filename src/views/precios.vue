@@ -43,8 +43,9 @@ const esFavorito = (planId) => planFavorito.value === planId;
 
 
 <template>
+  <h1>Cuotas planes de entrenamiento</h1>
   <div class="paginaInicio"></div>
-
+  <h1>Cuotas planes de entrenamiento</h1>
   <div class="rellenoInicio">
     <div class="contenido">
       <div class="card" v-for="plan in planes" :key="plan.id">
@@ -76,8 +77,12 @@ const esFavorito = (planId) => planFavorito.value === planId;
 <style scoped>
 /* Estilos para los títulos y párrafos, con texto blanco */
 h1 {
-  color: rgb(255, 255, 255);
-  margin: 10px;
+  color: black;
+  background-color: rgb(255, 255, 255);
+  padding: 1rem;
+  width: 100%;
+  text-align: center;
+  margin: 0;
 }
 h2 {
   color: rgb(255, 255, 255);
