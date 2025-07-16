@@ -83,6 +83,9 @@ onMounted(() => {
         <li class="navegadorLi">
           <router-link to="/horarios">Horarios</router-link>
         </li>
+        <li v-if="esAdmin" class="navegadorLi">
+          <router-link to="/Admin">Admin</router-link>
+        </li>
       </ul>
       <div class="logomenu">
         <img src="/favicon.ico" />

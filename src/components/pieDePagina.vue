@@ -48,7 +48,7 @@
     </a>
 
     <!-- Teléfono -->
-    <a class="phone-icon" href="tel:950128911">950 12 89 11</a>
+    <a class="phone-icon" href="tel:950128911">Llámanos para mas información.</a>
 
     <!-- Derechos Reservados -->
     <div class="copyright" role="contentinfo" aria-label="Derechos Reservados">

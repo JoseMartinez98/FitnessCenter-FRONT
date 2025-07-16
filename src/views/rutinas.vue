@@ -1,8 +1,14 @@
 <script setup>
-import { ref, onMounted } from "vue"; // Importa funciones reactivas y ciclo de vida de Vue
+import { ref, onMounted, computed } from "vue"; // Importa funciones reactivas y ciclo de vida de Vue
+import { usuario, setUsuario, cargarUsuario } from "@/composables/useAuth";
 import axios from "axios"; // Importa axios para hacer peticiones HTTP
 
 const rutinas = ref([]); // Define un array reactivo para almacenar las rutinas
+const esAdmin = computed(
+  () =>
+    Array.isArray(usuario.value?.roles) &&
+    usuario.value.roles.some((rol) => rol.toLowerCase() === "role_admin")
+);
 
 // Se ejecuta cuando el componente está montado
 onMounted(async () => {
@@ -16,6 +22,18 @@ onMounted(async () => {
   }
 });
 
+const eliminarRutina = async (id) => {
+  if (confirm("¿Estás seguro de que deseas eliminar esta rutina?")) {
+    try {
+      await axios.delete(`http://localhost:8080/api/rutinas/${id}`);
+      await fetchRutinas(currentPage.value); // recarga la página actual
+    } catch (error) {
+      console.error("Error al eliminar la rutina:", error);
+      alert("No se pudo eliminar la rutina.");
+    }
+  }
+};
+
 // Función para descargar un documento dado su URL
 const descargarDocumento = (ruta) => {
   const enlace = document.createElement("a"); // Crea un elemento <a> temporal
@@ -27,7 +45,6 @@ const descargarDocumento = (ruta) => {
 </script>
 
 <template>
-  <h1> rutinas</h1>
   <div class="paginaInicio"></div>
   <!-- Fondo con imagen de mancuernas -->
   <h1>RUTINAS DE ENTRENAMIENTO</h1>
@@ -55,6 +72,13 @@ const descargarDocumento = (ruta) => {
               <!-- Botón para descargar el documento asociado -->
               <button @click="descargarDocumento(rutina.documento)">
                 📄 Descargar
+              </button>
+              <button
+                v-if="esAdmin"
+                class="eliminar"
+                @click="eliminarRutina(rutina.id)"
+              >
+                Eliminar
               </button>
             </td>
           </tr>
@@ -123,9 +147,9 @@ const descargarDocumento = (ruta) => {
   z-index: 2;
   position: relative;
 }
-h1{
-  color: black;
-  background-color: rgb(255, 255, 255);
+h1 {
+  color: white;
+  background-color: green;
   padding: 1rem;
   width: 100%;
   text-align: center;
@@ -143,24 +167,24 @@ h2 {
 .tabla-rutinas th,
 .tabla-rutinas td {
   padding: 2rem;
-  border: 1px solid green;
   text-align: center;
+  font-weight: bold;
 }
 
 /* Encabezados de la tabla */
 .tabla-rutinas th {
-  background-color: #222;
+  background-color: #000000;
   color: green;
 }
 
 /* Filas pares con fondo claro */
 .tabla-rutinas tr:nth-child(even) {
-  background-color: #f2f2f2;
+  background-color: #f2f2f2d8;
 }
 
 /* Filas impares con fondo gris y texto blanco */
 .tabla-rutinas tr:nth-child(odd) {
-  background-color: rgb(190, 190, 190);
+  background-color: rgba(0, 0, 0, 0.775);
   color: white;
 }
 
@@ -177,7 +201,18 @@ h2 {
 .tabla-rutinas button:hover {
   background-color: #45a049;
 }
-
+.tabla-rutinas .eliminar {
+  color: white;
+  background-color: red;
+  border: none;
+  padding: 12px 12px;
+  border-radius: 16px;
+  font-size: 16px;
+  margin: 1rem;
+}
+.tabla-rutinas .eliminar:hover {
+  background-color: rgb(184, 2, 2);
+}
 /* Estilos responsivos para pantallas pequeñas */
 @media (max-width: 768px) {
   .tabla-rutinas {
@@ -194,8 +229,6 @@ h2 {
   .tabla-rutinas tr {
     display: block;
     margin-bottom: 1rem;
-    border: 2px solid green;
-    border-radius: 10px;
     padding: 1rem;
     background-color: white;
   }

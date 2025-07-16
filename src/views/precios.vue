@@ -47,7 +47,6 @@ const esFavorito = (planId) => planFavorito.value === planId;
 
 
 <template>
-  <h1>Cuotas planes de entrenamiento</h1>
   <div class="paginaInicio"></div>
   <h1>Cuotas planes de entrenamiento</h1>
   <div class="rellenoInicio">
@@ -81,8 +80,8 @@ const esFavorito = (planId) => planFavorito.value === planId;
 <style scoped>
 /* Estilos para los títulos y párrafos, con texto blanco */
 h1 {
-  color: black;
-  background-color: rgb(255, 255, 255);
+  color: white;
+  background-color: green;
   padding: 1rem;
   width: 100%;
   text-align: center;
@@ -147,7 +146,7 @@ span {
 .rellenoInicio .contenido {
   position: relative;
   z-index: 2;
-  color: white;
+  color: rgba(255, 255, 255, 0.89);
   text-align: center;
   padding-top: 50px;
 }
@@ -164,10 +163,9 @@ span {
 /* Estilos para las tarjetas de los planes */
 .card {
   width: 40%;
-  background-color: rgb(0, 0, 0);
-  border: 2px solid green;
-  border-radius: 16px;
+  background-color: rgba(0, 0, 0, 0.822);
   text-align: left;
+  font-weight: bolder !important;
   margin: 2%;
   overflow: hidden; 
   display: flex;

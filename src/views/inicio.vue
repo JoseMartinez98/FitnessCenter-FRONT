@@ -1,5 +1,6 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
+import { usuario, setUsuario, cargarUsuario } from "@/composables/useAuth";
 import axios from "axios";
 
 const noticias = ref([]);
@@ -16,6 +17,12 @@ const formatDate = (dateString) => {
   });
 };
 
+const esAdmin = computed(
+  () =>
+    Array.isArray(usuario.value?.roles) &&
+    usuario.value.roles.some((rol) => rol.toLowerCase() === "role_admin")
+);
+
 const fetchNoticias = async (page = 0) => {
   try {
     const response = await axios.get("http://localhost:8080/api/noticias", {
@@ -31,6 +38,17 @@ const fetchNoticias = async (page = 0) => {
     console.error("Error cargando noticias:", error);
   }
 };
+const eliminarNoticia = async (id) => {
+  if (confirm("¿Estás seguro de que deseas eliminar esta noticia?")) {
+    try {
+      await axios.delete(`http://localhost:8080/api/noticias/${id}`);
+      await fetchNoticias(currentPage.value); // recarga la página actual
+    } catch (error) {
+      console.error("Error al eliminar la noticia:", error);
+      alert("No se pudo eliminar la noticia.");
+    }
+  }
+};
 
 onMounted(() => {
   fetchNoticias();
@@ -38,7 +56,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <h1>Últimas noticias</h1>
   <div class="paginaInicio"></div>
   <h1>Últimas noticias</h1>
   <div class="rellenoInicio">
@@ -48,8 +65,15 @@ onMounted(() => {
           <h2 class="titulo">{{ noticia.titulo }}</h2>
           <p class="fecha">{{ noticia.contenido }}</p>
         </div>
-        <img :src="noticia.imagen" alt="Noticia" class="noticia-imagen" />
+        <img :src="`http://localhost:8080${noticia.imagen}`" alt="Noticia" class="noticia-imagen" />
         <p class="fecha">{{ formatDate(noticia.fechaRegistro) }}</p>
+        <button
+          v-if="esAdmin"
+          class="eliminar"
+          @click="eliminarNoticia(noticia.id)"
+        >
+          Eliminar
+        </button>
       </div>
       <div class="paginacion">
         <button
@@ -82,8 +106,8 @@ onMounted(() => {
   width: 100%;
 }
 h1 {
-  color: black;
-  background-color: rgb(255, 255, 255);
+  color: white;
+  background-color: green;
   padding: 1rem;
   width: 100%;
   text-align: center;
@@ -126,11 +150,9 @@ h1 {
 }
 
 .noticia {
-  background-color: rgba(0, 0, 0, 0.89);
+  background-color: rgba(0, 0, 0, 0.836);
   color: green;
-  border: 2px solid white;
   padding: 1rem;
-  border-radius: 16px;
   width: 90%;
   max-width: 800px;
   text-align: center;
@@ -153,6 +175,7 @@ h1 {
 
 .fecha {
   font-size: 1rem;
+  font-weight: bolder;
   margin-top: 0.5rem;
   color: white;
   text-justify: auto;
@@ -166,7 +189,7 @@ h1 {
   gap: 1rem;
   margin-top: 1rem;
 }
-button{
+button {
   all: unset;
   padding: 0.5rem;
   background-color: rgba(255, 255, 255, 0);
@@ -175,18 +198,31 @@ button{
   font-size: 50px;
   transition: 0.2s;
 }
-button:hover{
+button:hover {
   cursor: pointer;
   scale: 1.2;
 }
-button:focus{
-color:black;
+button:focus {
+  color: black;
 }
 button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
-
+.eliminar {
+  color: white;
+  background-color: red;
+  border: none;
+  padding: 12px 12px;
+  border-radius: 16px;
+  font-size: 16px;
+  margin: 1rem;
+}
+.eliminar:hover {
+  cursor: pointer;
+  scale: 1;
+  background-color: rgb(184, 2, 2);
+}
 @media (max-width: 768px) {
   .titulo {
     font-size: 1.5rem;

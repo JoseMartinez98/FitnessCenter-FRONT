@@ -1,26 +1,17 @@
 <script setup>
-// Importamos funciones reactivas y hooks del ciclo de vida de Vue
 import { ref, onMounted } from "vue";
-// Importamos axios para hacer peticiones HTTP
 import axios from "axios";
-// Importamos el router para navegación programática
 import { useRouter } from "vue-router";
-// Importamos funciones y variables relacionadas con la autenticación del usuario
 import { usuario, setUsuario, cargarUsuario } from "@/composables/useAuth";
 
-// Creamos una instancia del router para poder redirigir rutas
 const router = useRouter();
- 
-// Declaramos variables reactivas para email, contraseña, mensaje y estado de error
 const email = ref("");
 const password = ref("");
 const mensaje = ref("");
 const error = ref(false);
 
-// Función asincrónica para manejar el inicio de sesión
 const inicioSesion = async () => {
   try {
-    // Realizamos petición POST al backend para autenticar usuario
     console.log('Enviando login:', email.value, password.value);
     const response = await axios.post(
       "http://localhost:8080/api/usuarios/login",
@@ -30,10 +21,8 @@ const inicioSesion = async () => {
       }
     );
 
-    // 🔍 Mostramos en consola la respuesta para depuración
     console.log("Respuesta del backend:", response.data);
 
-    // ✅ Validamos que el token exista antes de guardarlo
     if (response.data?.token) {
       localStorage.setItem("token", response.data.token);
       setUsuario(response.data.usuario);
@@ -48,27 +37,22 @@ const inicioSesion = async () => {
       error.value = true;
     }
   } catch (err) {
-    // ❌ Captura y muestra error en la UI
     mensaje.value = err.response?.data || "Error al iniciar sesión";
     error.value = true;
     console.error("Error al iniciar sesión:", err);
   }
 };
 
-// Obtenemos el token almacenado en localStorage para validar sesión
 const token = localStorage.getItem("token");
 
-// Hacemos una petición GET protegida para verificar que el token es válido
 axios.get("http://localhost:8080/api/usuarios/protegido", {
   headers: {
-    Authorization: `Bearer ${token}`, // Enviamos token en encabezado
+    Authorization: `Bearer ${token}`,
   },
 });
 
-// Al montar el componente verificamos si ya hay un token guardado
 onMounted(() => {
   const token = localStorage.getItem("token");
-  // Si hay token, redirigimos directamente a la página principal
   if (token) {
     router.push("/inicio");
   }
@@ -78,7 +62,6 @@ onMounted(() => {
 <template>
   <div class="inicioSesion">
     <div class="social-icons">
-      <!-- Icono y enlace a Facebook -->
       <a
         href="https://www.facebook.com/MACAELFITNESSCENTER"
         target="_blank"
@@ -91,7 +74,6 @@ onMounted(() => {
         </svg>
       </a>
 
-      <!-- Icono y enlace a Instagram -->
       <a
         href="https://www.instagram.com/macaelfitnesscenter/"
         target="_blank"
@@ -109,29 +91,22 @@ onMounted(() => {
       </a>
     </div>
 
-    <!-- Formulario para inicio de sesión -->
     <form
       @submit.prevent="inicioSesion"
       class="formularioInicioSesion"
       action=""
       method="post"
     >
-      <!-- Prevenimos el submit estándar y ejecutamos la función inicioSesion -->
       <h1>INICIAR SESIÓN</h1>
-      <!-- Campo para email enlazado a la variable reactiva email -->
       <input v-model="email" type="email" placeholder="Correo" required />
-      <!-- Campo para contraseña enlazado a la variable reactiva password -->
       <input
         v-model="password"
         type="password"
         placeholder="Contraseña"
         required
       />
-      <!-- Botón para enviar formulario -->
       <button type="submit">Entrar</button>
-      <!-- Mensaje de error o información, se muestra sólo si mensaje no está vacío -->
       <p v-if="mensaje" :class="{ error: error }">{{ mensaje }}</p>
-      <!-- Enlace para ir a la página de registro de usuario -->
       <router-link class="enlace" to="/registrousuario">
         ¿Aún no estás registrado? Haga click aqui para registrase.
       </router-link>
@@ -143,15 +118,12 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* Estilos generales para el formulario y la página */
 
-/* Título */
 h1 {
   font-size: 2rem;
   text-align: center;
 }
 
-/* Estilos para los inputs */
 input {
   margin: 10px;
   font-size: 1rem;
@@ -161,7 +133,6 @@ input {
   box-sizing: border-box;
 }
 
-/* Estilos cuando el input está enfocado */
 input:focus {
   outline: none;
   background-color: black;

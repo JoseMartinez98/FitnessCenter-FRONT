@@ -4,7 +4,6 @@
 </script>
 
 <template>
-  <h1>Horarios de las clases</h1>
   <!-- Contenedor superior con imagen de fondo fija, representa cabecera visual -->
   <div class="paginaInicio"></div>
   <h1>Horarios de las clases</h1>
@@ -175,8 +174,8 @@
   padding: 20px;
 }
 h1 {
-  color: black;
-  background-color: rgb(255, 255, 255);
+  color: white;
+  background-color: green;
   padding: 1rem;
   width: 100%;
   text-align: center;
