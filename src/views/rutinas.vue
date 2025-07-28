@@ -1,26 +1,34 @@
 <script setup>
-import { ref, onMounted, computed } from "vue"; // Importa funciones reactivas y ciclo de vida de Vue
-import { usuario, setUsuario, cargarUsuario } from "@/composables/useAuth";
-import axios from "axios"; // Importa axios para hacer peticiones HTTP
+import { ref, onMounted, computed } from "vue";
+import { usuario } from "@/composables/useAuth";
+import axios from "axios";
 
-const rutinas = ref([]); // Define un array reactivo para almacenar las rutinas
+const rutinas = ref([]);
+const currentPage = ref(0);
+const totalPages = ref(0);
+const pageSize = 5;
+
 const esAdmin = computed(
   () =>
     Array.isArray(usuario.value?.roles) &&
     usuario.value.roles.some((rol) => rol.toLowerCase() === "role_admin")
 );
 
-// Se ejecuta cuando el componente está montado
-onMounted(async () => {
+const fetchRutinas = async (page = 0) => {
   try {
-    // Petición GET para obtener las rutinas desde el backend
-    const response = await axios.get("http://localhost:8080/api/rutinas");
-    rutinas.value = response.data; // Asigna la respuesta al array reactivo
+    const response = await axios.get("http://localhost:8080/api/rutinas", {
+      params: {
+        page,
+        size: pageSize,
+      },
+    });
+    rutinas.value = response.data.content;
+    totalPages.value = response.data.totalPages;
+    currentPage.value = response.data.number;
   } catch (error) {
-    // Si hay error, se muestra en consola
     console.error("Error al cargar las rutinas:", error);
   }
-});
+};
 
 const eliminarRutina = async (id) => {
   if (confirm("¿Estás seguro de que deseas eliminar esta rutina?")) {
@@ -34,14 +42,17 @@ const eliminarRutina = async (id) => {
   }
 };
 
-// Función para descargar un documento dado su URL
 const descargarDocumento = (ruta) => {
-  const enlace = document.createElement("a"); // Crea un elemento <a> temporal
-  enlace.href = ruta; // Asigna la ruta del archivo
-  enlace.download = ""; // Indica que será una descarga
-  enlace.target = "_blank"; // Abre en una pestaña nueva (opcional)
-  enlace.click(); // Simula el click para iniciar la descarga
+  const enlace = document.createElement("a");
+  enlace.href = ruta;
+  enlace.download = "";
+  enlace.target = "_blank";
+  enlace.click();
 };
+
+onMounted(() => {
+  fetchRutinas();
+});
 </script>
 
 <template>
@@ -84,6 +95,30 @@ const descargarDocumento = (ruta) => {
           </tr>
         </tbody>
       </table>
+      <div class="paginacion">
+        <button :disabled="currentPage === 0" @click="fetchRutinas(0)">
+          &lt;&lt;
+        </button>
+        <button
+          :disabled="currentPage === 0"
+          @click="fetchRutinas(currentPage - 1)"
+        >
+          &lt;
+        </button>
+        <span>Página {{ currentPage + 1 }} de {{ totalPages }}</span>
+        <button
+          :disabled="currentPage + 1 >= totalPages"
+          @click="fetchRutinas(currentPage + 1)"
+        >
+          &gt;
+        </button>
+        <button
+          :disabled="currentPage + 1 >= totalPages"
+          @click="fetchRutinas(totalPages - 1)"
+        >
+          &gt;&gt; 
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -213,7 +248,34 @@ h2 {
 .tabla-rutinas .eliminar:hover {
   background-color: rgb(184, 2, 2);
 }
-/* Estilos responsivos para pantallas pequeñas */
+
+.paginacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.paginacion button {
+  all: unset;
+  padding: 0.5rem 1rem;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: green;
+  font-weight: bold;
+  font-size: 1.5rem;
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+.paginacion button:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+.paginacion button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
   .tabla-rutinas {
     width: 95%;

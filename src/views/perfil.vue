@@ -79,7 +79,7 @@ onMounted(async () => {
       <div class="contenidoPerfil" v-if="plan">
         <div class="card">
           <h1>{{ (plan.nombre ?? "Sin nombre").toUpperCase() }}</h1>
-          <img :src="plan.imagen" alt="Imagen del plan" />
+          <img :src="`http://localhost:8080${plan.imagen}`" alt="Imagen del plan" />
 
           <h2>
             PRECIO MENSUAL: <span>{{ plan.precioMensual }}€</span>
@@ -205,24 +205,25 @@ span {
 
 .card {
   width: 40%;
-  background-color: rgb(0, 0, 0);
-  border: 2px solid green;
-  border-radius: 16px;
+  background-color: rgba(0, 0, 0, 0.822);
   text-align: left;
+  font-weight: bolder !important;
   margin: 2%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
-.card > h1, h2 {
-  margin: 0.5rem;
-}
+
 /* Imagen dentro de la tarjeta ocupa todo ancho y 50% altura */
 .card img {
   width: 100%;
   height: 50%;
 }
+.card > h1, h2 {
+  margin: 0.5rem;
+}
+
 .favorito-btn {
   display: block;
   width: calc(

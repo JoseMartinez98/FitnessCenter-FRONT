@@ -200,8 +200,6 @@ button:hover {
   justify-content: center;
   padding: 20px;
   background-color: rgba(67, 199, 52, 0.866);
-  border-radius: 16px;
-  border: 2px solid rgba(0, 0, 0, 0.681);
 }
 
 /* Estilo para mensajes de error */

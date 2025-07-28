@@ -1,127 +1,59 @@
 <script setup>
-// Actualmente no se utiliza lógica o estado reactivo en este componente,
-// por lo que el bloque <script setup> está vacío.
+import { ref, onMounted, computed } from "vue";
+import { usuario, setUsuario, cargarUsuario } from "@/composables/useAuth";
+import axios from "axios";
+const Horario = ref([]);
+const esAdmin = computed(
+  () =>
+    Array.isArray(usuario.value?.roles) &&
+    usuario.value.roles.some((rol) => rol.toLowerCase() === "role_admin")
+);
+const eliminarImagen = async (imagenCompleta, id) => {
+  try {
+    await axios.delete(`http://localhost:8080/api/horario/${id}`);
+    Horario.value = Horario.value.filter((h) => h.id !== id);
+    alert("Imagen eliminada correctamente");
+  } catch (error) {
+    console.error("Error al eliminar la imagen:", error);
+    alert("Hubo un error al eliminar la imagen");
+  }
+};
+
+const cargarHorario = async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:8080/api/horario/imagen"
+    );
+    Horario.value = response.data;
+    console.log(Horario.value);
+  } catch (error) {
+    console.error("Error cargando datos:", error);
+  }
+};
+onMounted(() => {
+  cargarHorario();
+});
 </script>
-
 <template>
-  <!-- Contenedor superior con imagen de fondo fija, representa cabecera visual -->
   <div class="paginaInicio"></div>
-  <h1>Horarios de las clases</h1>
-  <!-- Contenedor principal con fondo de logo y contenido superpuesto -->
+  <h1>Horario Gimnasio</h1>
   <div class="rellenoInicio">
-    <div class="contenido">
-      <!-- Título centrado, estilizado con color verde y negrita -->
-      <h2>Horario Clases Dirigidas 24-25</h2>
-
-      <!-- Tabla principal con horario semanal de clases dirigidas -->
-      <table>
-        <thead>
-          <tr>
-            <!-- Encabezados de columnas para hora y días de la semana -->
-            <th>Hora</th>
-            <th>Lunes</th>
-            <th>Martes</th>
-            <th>Miércoles</th>
-            <th>Jueves</th>
-            <th>Viernes</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Filas que representan franjas horarias con clases programadas -->
-          <!-- Uso de colspan para unir celdas cuando una clase ocupa varias columnas -->
-          <!-- Clases codificadas con clases CSS para aplicar estilos diferenciados -->
-          <tr>
-            <td class="time-col">8:15</td>
-            <td class="aquasalud" colspan="4">AQUAGYM</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td class="time-col">9:15</td>
-            <td class="aquasalud" colspan="4">AQUAGYM</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td class="time-col">10:15</td>
-            <td class="aquasalud">AQUAGYM</td>
-            <td class="aquasalud">AQUAGYM</td>
-            <td class="aquasalud">AQUAGYM</td>
-            <td class="pilates">PILATES</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td class="time-col">11:15</td>
-            <td class="aquasalud" colspan="4">AQUAGYM</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td class="time-col">14:15</td>
-            <td class="ciclo">SPINNING</td>
-            <td class="crosshiit">MUSCULACIÓN</td>
-            <td class="ciclo">SPINNING</td>
-            <td class="crosshiit">MUSCULACIÓN</td>
-            <td class="crosshiit">MUSCULACION</td>
-          </tr>
-          <tr>
-            <td class="time-col">16:00</td>
-            <td class="ciclo">SPINNING</td>
-            <td class="ciclo nat-infantil">SPINNING<br />NATACIÓN</td>
-            <td class="crosshiit">MUSCULACIÓN</td>
-            <td class="ciclo nat-infantil">SPINNING<br />NATACIÓN</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td class="time-col">17:00</td>
-            <td></td>
-            <td class="nat-infantil">NATACIÓN</td>
-            <td></td>
-            <td class="nat-infantil">NATACIÓN</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td class="time-col">18:00</td>
-            <td></td>
-            <td class="pilates nat-infantil">PILATES<br />NATACIÓN</td>
-            <td></td>
-            <td class="pilates nat-infantil">PILATES<br />NATACIÓN</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td class="time-col">19:00</td>
-            <td class="crosshiit">MUSCULACIÓN</td>
-            <td class="zumba">
-              PILATES<br /><span
-                class="nat-adultos"
-                style="display: block; margin-top: 3px"
-                >NATACIÓN</span
-              >
-            </td>
-            <td class="crosshiit">MUSCULACIÓN</td>
-            <td class="zumba">
-              PILATES<br /><span
-                class="nat-adultos"
-                style="display: block; margin-top: 3px"
-                >NATACIÓN</span
-              >
-            </td>
-            <td class="pilates">PILATES</td>
-          </tr>
-          <tr>
-            <td class="time-col">20:00</td>
-            <td class="ciclo pilates">SPINNING<br />PILATES</td>
-            <td class="crosshiit">MUSCULACIÓN</td>
-            <td class="ciclo pilates">SPINNING<br />PILATES</td>
-            <td class="crosshiit">MUSCULACIÓN</td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- Nota informativa resaltada en rojo indicando condición mínima para impartir clases -->
-      <p>*Mínimo 5 personas para impartir clase</p>
+    <div class="contenido"></div>
+    <div class="card" v-for="foto in Horario" :key="foto.id">
+      <button
+        v-if="esAdmin"
+        class="eliminar"
+        @click="eliminarImagen(foto.imagen, foto.id)"
+      >
+        Eliminar
+      </button>
+      <img
+        :src="`http://localhost:8080${foto.imagen}`"
+        alt="Imagen del horario"
+      />
     </div>
   </div>
 </template>
-
 <style scoped>
 /* Estilos para la sección de encabezado con imagen de fondo fija */
 .paginaInicio {
@@ -144,8 +76,7 @@
   background-size: cover;
   background-attachment: fixed;
   background-position: bottom;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
 }
 
 /* Overlay semitransparente para oscurecer el fondo y mejorar legibilidad */
@@ -189,103 +120,35 @@ h2 {
   padding: 1rem;
   font-weight: bold;
 }
-p {
-  text-align: center;
-  color: rgb(255, 181, 32);
-  margin-top: 2%;
-  font-weight: bold;
-  border-radius: 16px;
-  padding: 1rem;
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 2;
 }
-/* Estilo para la tabla: ancho máximo, centrado, fondo blanco y sombra sutil */
-table {
-  border-collapse: collapse;
+
+.card img {
+  margin-top: 0;
   width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
-  background: rgb(255, 255, 255);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  height: 80%;
 }
-
-/* Estilos básicos para celdas: bordes, alineación y padding */
-th,
-td {
-  border: 1px solid #ccc;
-  text-align: center;
-  padding: 8px;
-  font-size: 14px;
-}
-
-/* Encabezados con fondo negro y texto blanco para contraste */
-th {
-  background: #000;
+.eliminar {
   color: white;
+  background-color: red;
+  border: none;
+  padding: 12px 12px;
+  border-radius: 16px;
+  font-size: 16px;
+  margin: 1rem;
+}
+.eliminar:hover {
+  cursor: pointer;
+  scale: 1;
+  background-color: rgb(184, 2, 2);
 }
 
-/* Columna de horario con fondo gris claro y texto negro en negrita */
-.time-col {
-  background: #ddd;
-  font-weight: bold;
-  color: black;
-}
-
-/* Clases específicas para tipos de actividades, diferenciadas por color y estilos */
-.aquasalud {
-  background: #c9d9eb;
-  font-weight: bold;
-  color: black;
-}
-
-.ciclo {
-  background: #ffeb99;
-  font-style: italic;
-  font-weight: bold;
-  color: black;
-}
-
-.crosshiit {
-  background: #d1e7c0;
-  font-weight: bold;
-  color: black;
-}
-
-.nat-infantil {
-  background: #79a8d1;
-  font-style: italic;
-  font-weight: bold;
-  color: rgb(0, 0, 0);
-}
-
-.pilates {
-  background: #f4a6c1;
-  font-weight: bold;
-  color: black;
-}
-
-.body {
-  background: #e86d6d;
-  font-weight: bold;
-  color: rgb(0, 0, 0);
-}
-
-.zumba {
-  background: #7f4bca;
-  font-weight: bold;
-  color: rgb(0, 0, 0);
-}
-
-.nat-adultos {
-  font-weight: bold;
-  color: rgb(0, 0, 0);
-}
-
-.gap {
-  background: #f6c99b;
-  font-weight: bold;
-  color: black;
-}
-
-/* Adaptación responsiva para dispositivos móviles */
 @media (max-width: 768px) {
   .contenido {
     padding: 10px;
@@ -293,27 +156,6 @@ th {
 
   h2 {
     font-size: 1.4rem !important;
-  }
-
-  /* La tabla se vuelve scrollable horizontalmente para mejor usabilidad en pantallas pequeñas */
-  table {
-    display: block;
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    max-width: 100%;
-    font-size: 12px;
-  }
-
-  th,
-  td {
-    padding: 6px 4px;
-    font-size: 12px;
-    white-space: nowrap;
-  }
-
-  th {
-    font-size: 13px;
   }
 
   .paginaInicio {
@@ -329,10 +171,6 @@ th {
 
   .rellenoInicio .contenido {
     padding-top: 20px;
-  }
-
-  td {
-    line-height: 1.2em;
   }
 
   /* Ajuste opcional para mejorar contraste en modo móvil */

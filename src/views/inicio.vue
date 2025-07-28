@@ -65,7 +65,11 @@ onMounted(() => {
           <h2 class="titulo">{{ noticia.titulo }}</h2>
           <p class="fecha">{{ noticia.contenido }}</p>
         </div>
-        <img :src="`http://localhost:8080${noticia.imagen}`" alt="Noticia" class="noticia-imagen" />
+        <img
+          :src="`http://localhost:8080${noticia.imagen}`"
+          alt="Noticia"
+          class="noticia-imagen"
+        />
         <p class="fecha">{{ formatDate(noticia.fechaRegistro) }}</p>
         <button
           v-if="esAdmin"
@@ -76,18 +80,27 @@ onMounted(() => {
         </button>
       </div>
       <div class="paginacion">
+        <button :disabled="currentPage === 0" @click="fetchNoticias(0)">
+          &lt;&lt;
+        </button>
         <button
           :disabled="currentPage === 0"
           @click="fetchNoticias(currentPage - 1)"
         >
-          <
+          &lt;
         </button>
         <span>Página {{ currentPage + 1 }} de {{ totalPages }}</span>
         <button
           :disabled="currentPage + 1 >= totalPages"
           @click="fetchNoticias(currentPage + 1)"
         >
-          >
+          &gt;
+        </button>
+        <button
+          :disabled="currentPage + 1 >= totalPages"
+          @click="fetchNoticias(totalPages - 1)"
+        >
+          &gt;&gt; 
         </button>
       </div>
     </div>
@@ -189,26 +202,26 @@ h1 {
   gap: 1rem;
   margin-top: 1rem;
 }
-button {
+
+.paginacion button {
   all: unset;
-  padding: 0.5rem;
-  background-color: rgba(255, 255, 255, 0);
-  text-shadow: 2px 2px 2px green;
-  border-radius: 16px;
-  font-size: 50px;
-  transition: 0.2s;
+  padding: 0.5rem 1rem;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: green;
+  font-weight: bold;
+  font-size: 1.5rem;
+  border-radius: 12px;
+  transition: all 0.2s;
 }
-button:hover {
+.paginacion button:hover {
   cursor: pointer;
-  scale: 1.2;
+  transform: scale(1.1);
 }
-button:focus {
-  color: black;
-}
-button:disabled {
-  opacity: 0.5;
+.paginacion button:disabled {
+  opacity: 0.4;
   cursor: not-allowed;
 }
+
 .eliminar {
   color: white;
   background-color: red;
