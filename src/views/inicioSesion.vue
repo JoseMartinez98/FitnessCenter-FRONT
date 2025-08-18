@@ -2,7 +2,7 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
-import { usuario, setUsuario, cargarUsuario } from "@/composables/useAuth";
+import { setUsuario } from "@/composables/useAuth";
 
 const router = useRouter();
 const email = ref("");
@@ -12,7 +12,7 @@ const error = ref(false);
 
 const inicioSesion = async () => {
   try {
-    console.log('Enviando login:', email.value, password.value);
+    console.log("Enviando login:", email.value, password.value);
     const response = await axios.post(
       "http://localhost:8080/api/usuarios/login",
       {
@@ -20,9 +20,7 @@ const inicioSesion = async () => {
         password: password.value,
       }
     );
-
     console.log("Respuesta del backend:", response.data);
-
     if (response.data?.token) {
       localStorage.setItem("token", response.data.token);
       setUsuario(response.data.usuario);
@@ -50,6 +48,12 @@ axios.get("http://localhost:8080/api/usuarios/protegido", {
     Authorization: `Bearer ${token}`,
   },
 });
+
+const entrarComoInvitado = () => {
+  localStorage.removeItem("token");
+  setUsuario({ nombre: "Invitado" });
+  router.push("/inicio");
+};
 
 onMounted(() => {
   const token = localStorage.getItem("token");
@@ -107,6 +111,9 @@ onMounted(() => {
       />
       <button type="submit">Entrar</button>
       <p v-if="mensaje" :class="{ error: error }">{{ mensaje }}</p>
+      <button type="button" @click="entrarComoInvitado" class="btn-invitado">
+        Entrar como invitado
+      </button>
       <router-link class="enlace" to="/registrousuario">
         ¿Aún no estás registrado? Haga click aqui para registrase.
       </router-link>
@@ -118,7 +125,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-
 h1 {
   font-size: 2rem;
   text-align: center;
@@ -244,6 +250,25 @@ button:hover {
 
 .social-icons a.instagram:hover svg {
   fill: #e1306c; /* Rosa Instagram por defecto */
+}
+
+.btn-invitado {
+  font-size: 1rem;
+  padding: 10px;
+  color: black;
+  background-color: white;
+  border: 2px solid black;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  width: 60%;
+  margin-top: 10px;
+}
+
+.btn-invitado:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background-color: #f0f0f0;
 }
 
 /* Estilos para móviles */
