@@ -115,10 +115,10 @@ onMounted(() => {
         Entrar como invitado
       </button>
       <router-link class="enlace" to="/registrousuario">
-        ¿Aún no estás registrado? Haga click aqui para registrase.
+        ¿Aún no estás registrado? Haga click aquí para registrarse.
       </router-link>
       <router-link class="enlace" to="/cambiar-contrasena">
-        ¿Olvidaste tu contraseña? Haz clic aquí para restablecerla.
+        ¿Olvidaste tu contraseña? Haz click aquí para restablecerla.
       </router-link>
     </form>
   </div>

@@ -42,7 +42,7 @@ const eliminarNoticia = async (id) => {
   if (confirm("¿Estás seguro de que deseas eliminar esta noticia?")) {
     try {
       await axios.delete(`http://localhost:8080/api/noticias/${id}`);
-      await fetchNoticias(currentPage.value); // recarga la página actual
+      await fetchNoticias(currentPage.value); 
     } catch (error) {
       console.error("Error al eliminar la noticia:", error);
       alert("No se pudo eliminar la noticia.");
