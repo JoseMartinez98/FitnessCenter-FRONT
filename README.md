@@ -22,7 +22,7 @@ Este proyecto utiliza un stack moderno para asegurar rendimiento y escalabilidad
 | **Framework** | **Vue 3 (Composition API)** | Construcción de componentes de la UI. |
 | **Build Tool** | **Vite** | Empaquetado rápido de módulos y entorno de desarrollo. |
 | **Routing** | **Vue Router** | Navegación entre las diferentes vistas de la aplicación. |
-| **State Management** | **[Pinia / Vuex]** | Gestión centralizada del estado de la aplicación (e.g., sesión de usuario, datos de clases). *[Ajustar si se usa otro]* |
+| **State Management** | **[Pinia / Vuex]** | Gestión centralizada del estado de la aplicación (e.g., sesión de usuario, datos de clases).  |
 | **HTTP Client** | **Axios / Fetch API** | Comunicación con el backend (API RESTful). |
 
 ## 📐 Estructura del Código
