@@ -1,29 +1,90 @@
-# macaelfitnesscenterfront
+# 🤸 FitnessCenter-FRONT
 
-This template should help get you started developing with Vue 3 in Vite.
+[![Vue.js](https://img.shields.io/badge/Vue.js-3.x-4FC08D.svg)](https://vuejs.org/)
+[![Vite](https://img.shields.io/badge/Build%20Tool-Vite-646CFF.svg)](https://vitejs.dev/)
+[![JavaScript](https://img.shields.io/badge/Language-JavaScript-F7DF1E.svg)](https://developer.mozilla.org/es/docs/Web/JavaScript)
+[![Desplegado en Vercel](https://img.shields.io/badge/Despliegue-Vercel-000000.svg)](https://vercel.com/)
 
-## Recommended IDE Setup
+El frontend de **FitnessCenter** es una Interfaz de Usuario (UI) dinámica y reactiva desarrollada con **Vue 3** y **Vite**, diseñada para interactuar con la API RESTful del backend. Permite a los usuarios (miembros y personal administrativo) gestionar rutinas, ver horarios de clases y administrar sus perfiles.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## 🔗 Demo en Vivo
 
-## Customize configuration
+Puedes acceder a una versión beta desplegada y en funcionamiento del proyecto aquí a través de la demo:
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+👉 **[https://macaelfitnesscenter.vercel.app]** 👈
 
-## Project Setup
+## 💻 Tecnologías y Herramientas
 
-```sh
+Este proyecto utiliza un stack moderno para asegurar rendimiento y escalabilidad:
+
+| Componente | Tecnología | Propósito Principal |
+| :--- | :--- | :--- |
+| **Framework** | **Vue 3 (Composition API)** | Construcción de componentes de la UI. |
+| **Build Tool** | **Vite** | Empaquetado rápido de módulos y entorno de desarrollo. |
+| **Routing** | **Vue Router** | Navegación entre las diferentes vistas de la aplicación. |
+| **State Management** | **[Pinia / Vuex]** | Gestión centralizada del estado de la aplicación (e.g., sesión de usuario, datos de clases). *[Ajustar si se usa otro]* |
+| **HTTP Client** | **Axios / Fetch API** | Comunicación con el backend (API RESTful). |
+
+## 📐 Estructura del Código
+
+La estructura sigue las convenciones recomendadas de Vue/Vite:
+
+src/
+├── assets/             # Archivos estáticos (imágenes, fuentes, SCSS global)
+├── components/         # Componentes reutilizables de UI (Botones, Tarjetas, Menús)
+├── views/              # Componentes de nivel superior que representan las páginas (Rutas)
+├── router/             # Configuración y definición de rutas (index.js)
+├── stores/             # Módulos de gestión de estado con Pinia/Vuex
+├── services/           # Lógica para interactuar con el backend (Axios/API calls)(No reflejado en la raiz, actualmente en desarollo)
+├── App.vue             # Componente raíz de la aplicación
+└── main.js             # Inicialización de la aplicación (montaje, router, store)
+
+
+## ✨ Características y Vistas Principales
+
+El frontend cubre la funcionalidad completa del Centro de Fitness, ofreciendo las siguientes vistas:
+
+* **Autenticación (`/login`, `/register`):** Formulario para iniciar sesión y registrar nuevos miembros.
+* **Panel de Control (`/dashboard`):** Vista inicial para el miembro con un resumen de sus planes y noticias.
+* **Horario de Clases (`/schedule`):** Vista interactiva para consultar de las clases por día y hora.
+* **Planes (`/bookings`):** Interfaz para añadir un plan a favoritos.
+* **Perfil de Usuario (`/profile`):** Edición de datos personales y visualización del historial de membresía.
+* **[Área Administrativa (`/admin/*`)]:** Vistas protegidas para la gestión de rutinas, planes y horarios. 
+
+## 🚀 Instalación y Ejecución Local
+
+Sigue estos pasos para levantar el proyecto en tu entorno de desarrollo.
+
+### 1. Requisitos
+
+Asegúrate de tener instalado **Node.js** (se recomienda la versión LTS) y **npm** o **yarn**.
+
+### 2. Clonar el Repositorio
+
+```bash
+git clone [https://github.com/JoseMartinez98/FitnessCenter-FRONT.git](https://github.com/JoseMartinez98/FitnessCenter-FRONT.git)
+cd FitnessCenter-FRONT
+### 3. Instalar Dependencias
+Bash
+
 npm install
-```
+# O si usas yarn
+# yarn install
+4. Configuración del Entorno (Variables)
+Crea un archivo llamado .env en la raíz del proyecto para definir la URL del backend (API REST):
 
-### Compile and Hot-Reload for Development
+# .env
+VITE_API_BASE_URL=http://localhost:8080/api/v1  
+### 5. Compilar y Ejecutar en Desarrollo
+Bash
 
-```sh
 npm run dev
-```
+La aplicación estará disponible en tu navegador en la URL indicada por Vite (generalmente http://localhost:5173/). Incluye Hot-Module Reloading (HMR) para desarrollo rápido.
 
-### Compile and Minify for Production
+### 6. Compilar para Producción
+Para generar una versión optimizada y minificada para el despliegue:
 
-```sh
+Bash
+
 npm run build
-```
+Los archivos estáticos listos para ser servidos se generarán en el directorio /dist.
