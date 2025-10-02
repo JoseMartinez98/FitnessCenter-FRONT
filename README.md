@@ -29,15 +29,15 @@ Este proyecto utiliza un stack moderno para asegurar rendimiento y escalabilidad
 
 La estructura sigue las convenciones recomendadas de Vue/Vite:
 
-src/
-├── assets/             # Archivos estáticos (imágenes, fuentes, SCSS global)
-├── components/         # Componentes reutilizables de UI (Botones, Tarjetas, Menús)
-├── views/              # Componentes de nivel superior que representan las páginas (Rutas)
-├── router/             # Configuración y definición de rutas (index.js)
-├── stores/             # Módulos de gestión de estado con Pinia/Vuex
-├── services/           # Lógica para interactuar con el backend (Axios/API calls)(No reflejado en la raiz, actualmente en desarollo)
-├── App.vue             # Componente raíz de la aplicación
-└── main.js             # Inicialización de la aplicación (montaje, router, store)
+src/  
+├── assets/             # Archivos estáticos (imágenes, fuentes, SCSS global)  
+├── components/         # Componentes reutilizables de UI (Botones, Tarjetas, Menús)  
+├── views/              # Componentes de nivel superior que representan las páginas (Rutas)  
+├── router/             # Configuración y definición de rutas (index.js)  
+├── stores/             # Módulos de gestión de estado con Pinia/Vuex  
+├── services/           # Lógica para interactuar con el backend (Axios/API calls)(No reflejado en la raiz, actualmente en desarollo)  
+├── App.vue             # Componente raíz de la aplicación  
+└── main.js             # Inicialización de la aplicación (montaje, router, store)  
 
 
 ## ✨ Características y Vistas Principales
