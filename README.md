@@ -44,12 +44,13 @@ src/
 
 El frontend cubre la funcionalidad completa del Centro de Fitness, ofreciendo las siguientes vistas:
 
-* **Autenticación (`/login`, `/register`):** Formulario para iniciar sesión y registrar nuevos miembros.
-* **Panel de Control (`/dashboard`):** Vista inicial para el miembro con un resumen de sus planes y noticias.
-* **Horario de Clases (`/schedule`):** Vista interactiva para consultar de las clases por día y hora.
-* **Planes (`/bookings`):** Interfaz para añadir un plan a favoritos.
-* **Perfil de Usuario (`/profile`):** Edición de datos personales y visualización del historial de membresía.
-* **[Área Administrativa (`/admin/*`)]:** Vistas protegidas para la gestión de rutinas, planes y horarios. 
+* **Autenticación :** Formulario para iniciar sesión y registrar nuevos miembros.
+* **Inicio :** Vista inicial para el miembro con noticias.
+* **Horario de Clases :** Vista interactiva para consultar de las clases por día y hora.
+* **Planes :** Interfaz para añadir un plan a favoritos.
+* **Rutinas :** Interfaz para descargar rutinas de diferentes tipos.  
+* **Perfil de Usuario:** Edición de datos personales y visualización del historial de membresía.
+* **[Área Administrativa ]:** Vistas protegidas para la gestión de rutinas, planes y horarios. 
 
 ## 🚀 Instalación y Ejecución Local
 
@@ -61,7 +62,6 @@ Asegúrate de tener instalado **Node.js** (se recomienda la versión LTS) y **np
 
 ### 2. Clonar el Repositorio
 
-```bash
 git clone [https://github.com/JoseMartinez98/FitnessCenter-FRONT.git](https://github.com/JoseMartinez98/FitnessCenter-FRONT.git)
 cd FitnessCenter-FRONT
 ### 3. Instalar Dependencias
@@ -75,6 +75,7 @@ Crea un archivo llamado .env en la raíz del proyecto para definir la URL del ba
 
 # .env
 VITE_API_BASE_URL=http://localhost:8080/api/v1  
+
 ### 5. Compilar y Ejecutar en Desarrollo
 Bash
 
